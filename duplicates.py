@@ -168,7 +168,7 @@ def fetch_images_batch(image_urls_dict):
     return results
 
 
-# Attempt to load data from upload or local file
+# Attempt to load data from upload
 if st.session_state.df is None:
     st.header("Upload Dataset")
 
@@ -205,44 +205,6 @@ if st.session_state.df is None:
                 st.rerun()
         except Exception as e:
             st.error(f"Error loading uploaded data: {e}")
-            st.exception(e)
-            st.stop()
-
-    # Alternative: Try to load from local file if no upload
-    st.markdown("---")
-    st.markdown("### Or use local file")
-
-    if st.button("Load from local file (duplicates.csv)"):
-        try:
-            file_path = "duplicates.csv"
-            with st.spinner(f"Loading data from {file_path}..."):
-                @st.cache_data(ttl=3600)
-                def load_csv(path):
-                    return pd.read_csv(path)
-
-
-                df = load_csv(file_path)
-
-                # Validate the required columns
-                required_columns = ["id", "Outfit Item ID", "Outfit Item Cover Link", "duplicate_clusters"]
-                missing_columns = [col for col in required_columns if col not in df.columns]
-
-                if missing_columns:
-                    st.error(f"Missing required columns in {file_path}: {', '.join(missing_columns)}")
-                    st.stop()
-
-                # Store in session state
-                st.session_state.df = df
-
-                # Success message
-                st.success(f"Dataset loaded successfully with {len(df)} items!")
-                st.rerun()
-        except FileNotFoundError:
-            st.error(f"File 'duplicates.csv' not found in the current directory.")
-            st.info("Please make sure the file exists in the same directory as this application.")
-            st.stop()
-        except Exception as e:
-            st.error(f"Error loading data: {e}")
             st.exception(e)
             st.stop()
 
