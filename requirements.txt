@@ -5,3 +5,9 @@ pillow
 matplotlib
 pyarrow
 requests
+
+openai
+pydantic
+open-clip-torch
+sentence-transformers
+torch
